@@ -1,0 +1,34 @@
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.empty()) return {};
+        int m = matrix.size();
+        if (m == 0) return {};
+        int n = matrix[0].size();
+        vector<int> result(m*n);
+        int up = 0, down = m - 1, right = n - 1, left = 0, k =0;
+        while (true) {
+            //while travelling up
+            for (int col = left; col <= right; col++)
+                result[k++] = matrix[up][col];
+            if (++up > down)
+                break;
+            //while travelling right
+            for (int row = up; row <= down; row++)
+                result[k++] = matrix[row][right];
+            if (--right < left)
+                break;
+            //while travelling down
+            for (int col = right; col >= left; col--)
+                result[k++] = matrix[down][col];
+            if (--down < up)
+                break;
+            //while travelling left
+            for (int row = down; row >= up; row--)
+                result[k++] = matrix[row][left];
+            if (++left > right)
+                break;
+        }
+        return result;
+    }
+};
