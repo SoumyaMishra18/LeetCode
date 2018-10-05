@@ -1,0 +1,12 @@
+class Solution {
+public:
+    vector<int> numberOfLines(vector<int>& widths, string S) {
+        int res=1, cur=0;
+        for (auto c : S) {
+            int w = widths[c - 'a'];
+            res = cur + w > 100?res+1:res;
+            cur = cur + w > 100?w:cur+w;
+        }
+        return {res, cur};
+    }
+};
