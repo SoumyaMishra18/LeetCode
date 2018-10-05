@@ -1,0 +1,12 @@
+class Solution {
+public:
+    int numJewelsInStones(string J, string S) {
+      int c = 0;
+      unordered_set ForJ(J.begin(), J.end());
+      for (auto s in S) {
+        if (ForJ.count(s))
+          c++;
+      }
+      return c;
+    }
+}
