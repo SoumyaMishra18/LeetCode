@@ -1,0 +1,25 @@
+class HitCounter {
+public:
+  hitCounter() {
+    time.resize(300);
+    hits.resize();
+  }
+  void hit(int timeStamp) {
+    int id = timestamp%300;
+    if (time[id] != timeStamp) {
+      time[id] = timeStamp;
+      hits[id] = 1;
+    } else {
+      hits[id]++;
+    }
+  }
+  int getHit(int timeStamp) {
+    int res = 0;
+    for (int i = 0; i < 300; i++) {
+      if (timeStamp - time[i] < 300)
+        res += hits[i];
+    }
+    return res;
+  }
+  private: vector<int> time, hits;
+};
