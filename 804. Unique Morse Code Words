@@ -1,0 +1,17 @@
+class Solution {
+public:
+    vector<string> morse_code = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+    
+    int uniqueMorseRepresentations(vector<string>& words) {
+        unordered_set<string> codes;
+    
+        for(auto word : words) {
+            string code = "";
+            for(auto ch : word)
+                code += morse_code[ch - 'a'];
+            codes.insert(code);
+    }
+    
+    return codes.size();
+    }
+};
