@@ -49,28 +49,31 @@ private:
 
 public:
 Solution() {
+//populate the folders
      folders.emplace_back("A", "");
      folders.emplace_back("B", "A");
      folders.emplace_back("C", "B");
      folders.emplace_back("D", "B");
      folders.emplace_back("E", "A");
      folders.emplace_back("F", "E");
-    
+//populate the access     
      access.emplace("C");
      access.insert("E");
-     
+//populate the mapping between parent to child folder     
      for (int i = 0; i < folders.size(); i++) {
           parentToChildMap.insert(pair<string, string> (folders[i][0], folders[i][1]));
      }
 }
 
 boolean hasAccess(string name) {
+//iterate through the list of folders to determine access
      while (!name.compare("")) {
-          if (access.find(name) != access.end()){
+          unordered_set<string>::iterator sit = access.find(name);
+          if (sit != access.end()){
                return true;
           }
-          auto map<string, string>::iterator it = parentToChildMap.find(name)
-          if (it != parentToChildMap.end()
+          unordered_map<string, string>::iterator it = parentToChildMap.find(name)
+          if (it != parentToChildMap.end())
                name = it->second;
           else
                return false;
@@ -78,4 +81,33 @@ boolean hasAccess(string name) {
      }
      return false
 }
+
+unordered_set<string> removeRedundantAccess() {
+     unordered_set<string> temp;
+     //iterate through all the files in Access
+     
+     for (string c : access) {
+          // find the parent of the file
+          unordered_map<string, string>::iterator it = parentToChildMap.find(c);
+          
+          if (it != parentToChildMap.end()) {
+               string p = it->second;
+               
+               while (!p.compare("")) {
+               //if parent exists in access list, remove the child
+                    unordered_set<string>::iterator sit = access.find(name);
+                    
+                    if (sit != access.end()){
+                         temp.insert(c);
+                         break;
+                    }
+                    unordered_map<string, string>::iterator pit = parentToChildMap.find(p);
+               }
+          }
+     }
+     for (string c : temp)
+          access.erase(*c);
+     return access;
+}
+
 };
