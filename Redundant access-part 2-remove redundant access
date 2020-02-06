@@ -1,0 +1,81 @@
+Part 2 (parent-child chain)
+C++ template:
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+/*
+
+A
+|___ B 
+|    |___ C <-- access
+|    |___ D
+|___ E <-- access
+     |___ F 
+
+ */
+
+// To execute C++, please define "int main()"
+int main() {
+  
+  unordered_set<string> access = {
+    "C",
+    "E",
+  };
+
+  const vector<vector<string>> folders = {
+     {"A", ""},
+     {"B", "A"},
+     {"C", "B"},
+     {"D", "B"},
+     {"E", "A"},
+     {"F", "E"},
+  };
+  
+}
+
+
+class Solution {
+private:
+// List of vectors....parents comes before the child
+     vector<vector<string>> folders;
+// List of folders we have access to
+     unordered_set<srtring> access;
+// Mapping between child to parent
+     unordered_map<string, string> parentToChildMap;
+
+public:
+Solution() {
+     folders.emplace_back("A", "");
+     folders.emplace_back("B", "A");
+     folders.emplace_back("C", "B");
+     folders.emplace_back("D", "B");
+     folders.emplace_back("E", "A");
+     folders.emplace_back("F", "E");
+    
+     access.emplace("C");
+     access.insert("E");
+     
+     for (int i = 0; i < folders.size(); i++) {
+          parentToChildMap.insert(pair<string, string> (folders[i][0], folders[i][1]));
+     }
+}
+
+boolean hasAccess(string name) {
+     while (!name.compare("")) {
+          if (access.find(name) != access.end()){
+               return true;
+          }
+          auto map<string, string>::iterator it = parentToChildMap.find(name)
+          if (it != parentToChildMap.end()
+               name = it->second;
+          else
+               return false;
+          }
+     }
+     return false
+}
+};
