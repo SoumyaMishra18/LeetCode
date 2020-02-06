@@ -1,4 +1,4 @@
-C++ template:
+listC++ template:
 
 #include <iostream>
 #include <vector>
@@ -37,4 +37,15 @@ int main() {
 }
 
 
-class 
+class Solution {
+private:
+// List of vectors....parents comes before the child
+     vector<vector<string>> folders;
+// List of folders we have access to
+     unordered_set<srtring> access;
+// Mapping between child to parent
+     unordered_map<string, string> parentToChildMap;
+
+public:
+
+};
