@@ -102,6 +102,8 @@ unordered_set<string> removeRedundantAccess() {
                          break;
                     }
                     unordered_map<string, string>::iterator pit = parentToChildMap.find(p);
+                    if (pit != parentToChildMap.end())
+                         p = pit->second;
                }
           }
      }
