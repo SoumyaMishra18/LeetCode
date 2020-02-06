@@ -1,0 +1,40 @@
+C++ template:
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+/*
+
+A
+|___ B 
+|    |___ C <-- access
+|    |___ D
+|___ E <-- access
+     |___ F 
+
+ */
+
+// To execute C++, please define "int main()"
+int main() {
+  
+  unordered_set<string> access = {
+    "C",
+    "E",
+  };
+
+  const vector<vector<string>> folders = {
+     {"A", ""},
+     {"B", "A"},
+     {"C", "B"},
+     {"D", "B"},
+     {"E", "A"},
+     {"F", "E"},
+  };
+  
+}
+
+
+class 
