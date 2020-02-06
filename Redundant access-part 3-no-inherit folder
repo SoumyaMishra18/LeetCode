@@ -1,0 +1,120 @@
+Part 3 (parent-child chain)
+C++ template:
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+/*
+
+A
+|___ B 
+|    |___ C <-- access----no-inherit
+|    |___ D
+|___ E <-- access
+     |___ F 
+
+ */
+
+// To execute C++, please define "int main()"
+int main() {
+  
+  unordered_set<string> access = {
+    "C",
+    "E",
+  };
+
+  const vector<vector<string>> folders = {
+     {"A", ""},
+     {"B", "A"},
+     {"C", "B"},
+     {"D", "B"},
+     {"E", "A"},
+     {"F", "E"},
+  };
+  
+}
+
+
+class Solution {
+private:
+// List of vectors....parents comes before the child
+     vector<vector<string>> folders;
+// List of folders we have access to
+     unordered_set<srtring> access;
+// Mapping between child to parent
+     unordered_map<string, string> parentToChildMap;
+// Keep track of no-inherit folders
+  unordered_set<string> noInherit;
+
+public:
+Solution() {
+//populate the folders
+     folders.emplace_back("A", "");
+     folders.emplace_back("B", "A");
+     folders.emplace_back("C", "B");
+     folders.emplace_back("D", "B");
+     folders.emplace_back("E", "A");
+     folders.emplace_back("F", "E");
+//populate the access     
+     access.emplace("C");
+     access.emplace("E");
+//populate the mapping between parent to child folder     
+     for (int i = 0; i < folders.size(); i++) {
+          parentToChildMap.insert(pair<string, string> (folders[i][0], folders[i][1]));
+     }
+//populate the noInherit list     
+     noInherit.emplace("C");
+}
+
+boolean hasAccess(string name) {
+//iterate through the list of folders to determine access
+     while (!name.compare("")) {
+          if (access.find(name) != access.end()){
+               return true;
+          }
+          unordered_map<string, string>::iterator it = parentToChildMap.find(name)
+          if (it != parentToChildMap.end())
+               name = it->second;
+          else
+               return false;
+          }
+     }
+     return false
+}
+
+unordered_set<string> removeRedundantAccess() {
+     unordered_set<string> temp;
+     //iterate through all the files in Access
+     
+     for (string c : access) {
+          // find the parent of the file
+          if (noInherit.find(c) != noInherit.end)
+            continue;
+          unordered_map<string, string>::iterator it = parentToChildMap.find(c);
+          
+          if (it != parentToChildMap.end()) {
+               string p = it->second;
+               
+               while (!p.compare("")) {
+               //if parent exists in access list, remove the child      
+                    if (access.find(p) != access.end()){
+                         temp.insert(c);
+                         break;
+                    }
+                    if (noInherit.find(p) != noInherit.end())
+                        break
+                    unordered_map<string, string>::iterator pit = parentToChildMap.find(p);
+                    if (pit != parentToChildMap.end())
+                      p = pit->second;
+               }
+          }
+     }
+     for (string c : temp)
+          access.erase(*c);
+     return access;
+}
+
+};
