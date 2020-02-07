@@ -1,0 +1,43 @@
+//Implement a simple data structure with a constructor, a getter, and a setter for images in particular sectors.
+//You can assume that the number of rows and columns will be at most 1000 (i.e. 1000 x 1000 grid of sectors.) 
+
+class Image;
+
+struct Sector {
+  int row;
+  int col;
+};
+
+class Solution {
+  private:
+    int totalNumRows;
+    int totalNumCols;
+    
+  public:
+    Solution(int r, int c) {
+      totalNumRows = r;
+      totalNumCols = c;
+    }
+    void update (Sector s, Image* i) {
+      string file = generateFileName(s);
+      writeImage(file, i);
+    }
+    
+    Image* fetch (Sector s) {
+      string file = generateFileName(s);
+      Image* i = readImage(file);
+      if (i)
+        return i;
+      else
+        return nullptr;
+    }
+    
+    string generateFileName(Sector s) {
+      string str;
+      str.reserve[50];
+      str.append(s.row);
+      str.append('-');
+      str.append(s.col);
+      return str;
+    }
+};
