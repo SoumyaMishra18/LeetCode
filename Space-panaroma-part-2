@@ -1,0 +1,90 @@
+//Implememt get _stalest_sector()....
+// Returns a tuple of the form (row, col), representing the sector with
+// the stalest data.
+// Used to help the telescope decide where to aim next.
+//fetch() doesnot update the newness/staleness of the sector
+
+class Solution {
+  private:
+    int totalNumRows;
+    int totalNumCols;
+    vector<vector<int>> currentTime;
+    vector<int> stalestColPerRow;
+    Sector stalestSector;
+    
+  public:
+    Solution (int r, int c) {
+      totalNumRows = r;
+      totalNumCols = c;
+      stalestSector.row = -1;
+      stalestSector.col = -1;
+      stalestColPerRow.resize(r);
+      currentTime.resize(r, vector<int> (c));
+      for (int r1 = 0; r1 < r; r1++) {
+        for (int c1 = 0; c1 < c; c1++) {
+          currentTime[r1][c1] = 0;
+        }
+      }
+    }
+    
+    string generateFileName(Sector s) {
+      string str;
+      str.resize(50);
+      str.append(s.row);
+      str.append('-');
+      str.append(s.col);
+      return str;
+    }
+    
+    void updateTime(Sector s) {
+    //find the stalest time in a row
+      int stalestInRow = INT_MAX;
+    //find the stalest col for given sector's row
+      int stalesColRow = -1;
+      
+      for (int c = 0; c < s.col; c++) {
+        if (stalestInRow > currentTime[s.row][c]) {
+          stalestInRow = currentTime[s.row][c];
+          stalestColRow = c;
+        }
+      }
+      
+      if (stalestColRow == -1)
+        return;
+      //update the stalest column in the vector with stalest columns per row
+      stalestColPerRow[s.row] = stalestColRow;
+      
+      //update the stalest overall sector
+      int stalestOverAllSector = INT_MAX;
+      Sector new;
+      new.row = -1, new.col = -1;
+      
+      for (int r = 0; r < totalNumRows; r++) {
+        int c = stalestColPerRow[r];
+        int temp = currentTime[r][c]
+        if (stalestOverAllSector > temp) {
+          stalestOverAllSector = temp;
+          new.row = r;
+          new.col = c;
+        }
+      }
+      if (new.row == -1 || new.col == -1)
+        return;
+      stalestSector = new;
+    }
+    
+    void update (Sector s, Image* i) {
+      string str = generateFileName(s);
+      writeImage(str, i);
+      updateTime(s);
+    }
+    
+    Image* fetch(Sector s) {
+      string str = generateFileName(s);
+      Image* i = readImage(str);
+      if (i)
+        return i;
+      else
+        return nullptr;
+    }
+};
