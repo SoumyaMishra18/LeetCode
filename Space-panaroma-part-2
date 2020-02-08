@@ -4,7 +4,7 @@
 // Used to help the telescope decide where to aim next.
 //fetch() doesnot update the newness/staleness of the sector
 
-class Solution {
+class SpacePanaroma {
   private:
     int totalNumRows;
     int totalNumCols;
@@ -13,7 +13,7 @@ class Solution {
     Sector stalestSector;
     
   public:
-    Solution (int r, int c) {
+    SpacePanaroma (int r, int c) {
       totalNumRows = r;
       totalNumCols = c;
       stalestSector.row = -1;
