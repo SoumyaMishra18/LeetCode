@@ -1,0 +1,49 @@
+//What would have to change if the board was a million by a million? 
+
+/*
+The board is stored on disk in 1000 separate files, each with 1000 bit-packed rows
+Each file is 1/8*10^3*10^6 bytes, which is 125MB. Even when expanded (4 bytes / boolean), it fits in memory.
+The algorithm described below requires only 10^3 file reads and 10^3 file writes.
+*/
+
+    /*
+    Returns a 1D array of booleans for the ith row of the board.
+    The 1000-row block around this row is cached! This'll make this function quite fast most of the time.
+    Two special cases: if i < 0 or if i >= 10^6, returns a row of all False.
+    */
+    vector<boolean> readRow(int i) {};
+    
+    /*
+    If flush is True, this row is immediately written to disk in the appropriate file.
+    Otherwise, if this row is in the same 1000 row buffer as the last row written, it's simply stored in memory.
+    If it's in a different block, the cached block is written to disk.
+    */
+    public void writeRow(vector<boolean> row, int i, boolean flush){};
+    
+    /*
+    Takes a buffer of three consecutive rows. Returns the new state for the next row.
+    */
+ vector<vector<>boolean> newRow( vector<vector<>boolean> rows){};
+ 
+void calculate() {
+        vector<vector<>boolean> rows (3, vector<booleans>1000000)
+        rows[0] = readRow(-1);
+        rows[1] = readRow(0);
+        rows[2] = readRow(1);
+         
+        for (int i = 0; i < 1000000; i++) {
+            vector<boolean> new = newRow(ros);
+            // The last row has to be force-flushed, because there are no rows after it.
+            writeRow(new, i, (i == 1000000 - 1));
+             
+            // Adjust the rowBuffer.
+            rows[0] = rowBs[1];
+            rows[1] = rows[2];
+            rows[2] = readRow(i + 2);
+        }
+    }
+     
+}
+
+
+
