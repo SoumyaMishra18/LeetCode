@@ -1,0 +1,54 @@
+//Write a function that computes the result of one iteration of Conway's Game of Life
+//an n by m grid of "alive" or "dead" cells 
+//Each interior cell has 8 neighbors, the cells that are 1 square away horizontally, vertically, or diagonally. 
+//Each edge cell has 5 neighbors, and each corner cell has 3 neighbors. 
+//The following rules determine the next state of a cell:
+//•	If the cell is alive: if it has 2 or 3 alive neighbors, it stays alive. Otherwise, it dies.
+//•	If the cell is dead: if it has exactly 3 alive neighbors, it becomes alive. Otherwise, it stays dead.
+//•	The state of each cell is determined only by the state of its neighbors in the last iteration.
+//Example: Suppose x is dead and o is alive, what would the following input yield?
+
+/*
+Input:
+oxox
+xoox
+oxxo
+
+Output:
+xxox
+oxoo
+xoox
+
+What would the next iteration yield?
+*/
+//time O(mn), space O(mn)
+vector<vector<boolean>> gameOfLife (vector<vector<boolean>>& board) {
+  int row = board.size();
+  int col = board[0].size();
+  vector<vector<boolean>> result (row, vector<boolean>(col));
+  //populate the result array
+  for (int r = 0; r < row; r++) {
+    for (int c = 0; c < col; c++) {
+      result[r][c] = board[r][c];
+    }
+  }
+  for (int r = 0; r < row; r++) {
+    for (int c = 0; c < col; c++) {
+      int neighborCount = 0;
+      for (int i = max(r - 1, 0); i < min(r + 2, r); i++) {
+        for (int j = max(c - 1, 0); j < min(c + 2, c); j++) {
+          neighborCount += board[i][j] & 1;
+        }
+      }
+      // To handle counting of self value
+      neighborCount -= board[r][c] & 1;
+      //rule 1
+      if (board[r][c] && !((neighborCount == 2) || (neighborCount == 3)))
+        result[r][c] = false;
+      //rule 2
+      if ((!board[r][c]) && (neighborCount == 3))
+        result[r][c] = true;
+    }
+  }
+  return result;
+}
