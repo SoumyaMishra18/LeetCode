@@ -1,0 +1,61 @@
+/*Write a function that takes a path and returns a list of lists or sets. Each set should contain files that have the same content. Do not report singletons.
+
+Example: 
+Input: "/foo" 
+- /foo
+  - /images
+    - /foo.png  <------.
+  - /temp              | same file contents
+    - /baz             |
+      - /that.foo  <---|--.
+  - /bar.png  <--------'  |
+  - /file.tmp  <----------| same file contents
+  - /other.temp  <--------'
+  - /blah.txt
+
+Output:
+  [
+     ['/foo/bar.png', '/foo/images/foo.png'],
+     ['/foo/file.tmp', '/foo/other.temp', '/foo/temp/baz/that.foo']
+  ]
+*/
+
+class FindDuplicatesFiles {
+public:
+  vector<vector<string>> FindDuplicatesFiles (string path) {
+    vector<vector<string>> result;
+    unordered_map<string, vector<string>> fileMap;
+    //get absolute paths of all the files
+    vector<string> filePaths = getFilesPath(path);
+    for (string p : filePaths) {
+      //calculate the MD5 hash for each file
+      string md5hash = caluclateMD5Hash(p);
+      fileMap[md5hash].push_back(p);
+    }
+    for (auto f : fileMap) {
+      if (f.second.size() > 1) {
+        result.push_back(f.second);
+      }
+    }
+    return result;
+  }
+  
+  
+  
+  
+  
+  //use DFS to traverse the file tree and obtain the 
+  vector<string> getAbsoluteFilePath(string path) {
+    vector<string> allAbsolutePaths.resize(100);
+    stack<string> s;
+    s.push(path);
+    
+    while(!s.empty()) {
+      string cur = s.pop();
+      //get files from each sub-directory
+      DIR *dir = opendir(cur);
+      struct dirent *entry;
+      if (dir)
+    }
+  }
+};
