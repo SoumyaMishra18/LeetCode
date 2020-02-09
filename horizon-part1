@@ -1,0 +1,22 @@
+float horizon (vector<vector<float>>& grid) {
+  int row = grid.size();
+  int col = grid[0].size();
+  vector<vector<float>> dp (row, vector<float> (col));
+  for (int r = 0; r < row; r++)
+    dp[r][0] = grid[r][0];
+  vector<float> temp;
+  for (int c = 1; c < col; c++) {
+    for (int r = 0; r < row; r++) {
+      for (int i = r-1; i < r + 2; i++) {
+        if ((i >= 0) && (i < row))
+          temp.push_back(dp[i][c-1]);
+      }
+      float max = max_element(temp.begin(), temp.end());
+      dp[r][c] = min(max, grid[r][c]);
+    }
+  }
+  float res = 0.0;
+  for(int r = 0; r < row; r++) 
+    res = max(res, dp[r][col-1]);
+  return res;
+}
