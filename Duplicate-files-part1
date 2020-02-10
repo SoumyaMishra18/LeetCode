@@ -1,61 +1,108 @@
-/*Write a function that takes a path and returns a list of lists or sets. Each set should contain files that have the same content. Do not report singletons.
+#include <list>
+#include <string>
+#include <queue>
+#include <unordered_map>
+using namespace std;
 
-Example: 
-Input: "/foo" 
-- /foo
-  - /images
-    - /foo.png  <------.
-  - /temp              | same file contents
-    - /baz             |
-      - /that.foo  <---|--.
-  - /bar.png  <--------'  |
-  - /file.tmp  <----------| same file contents
-  - /other.temp  <--------'
-  - /blah.txt
+// You may assume that list_dir, is_dir, join_path are implemented.
+auto list_dir(const string& path) {
+  /*
+    Returns a non-recursive list of entries (files and folders) with relative
+    paths in this directory only. Basically the same functionality as doing "ls"
+    or "dir" in a shell.
+  */
+  return list<string>();
+}
 
-Output:
-  [
-     ['/foo/bar.png', '/foo/images/foo.png'],
-     ['/foo/file.tmp', '/foo/other.temp', '/foo/temp/baz/that.foo']
-  ]
-*/
+auto is_dir(const string& path) {
+  // Returns True if the given path corresponds to a directory.
+  return false;
+}
 
-class FindDuplicatesFiles {
-public:
-  vector<vector<string>> FindDuplicatesFiles (string path) {
-    vector<vector<string>> result;
-    unordered_map<string, vector<string>> fileMap;
-    //get absolute paths of all the files
-    vector<string> filePaths = getFilesPath(path);
-    for (string p : filePaths) {
-      //calculate the MD5 hash for each file
-      string md5hash = caluclateMD5Hash(p);
-      fileMap[md5hash].push_back(p);
+auto join_path(const string& path, const string& subpath) {
+  // Returns a path formed by combining the given path and the given subpath.
+  return string();
+}
+
+list<list<string>> find_duplicates_optimized(const string& root_path) {
+    list<list<string>> result;
+    
+    if(root_path.empty())
+        return result;
+
+    queue<string> Q; //For BFS walk of the files
+    unordered_map<int, list<string>> files_by_size;
+    Q.push(root_path);
+    while(!Q.empty()) {
+        string dir = Q.front();
+        Q.pop();
+        list<string> dir_contents = list_dir(dir);
+        for(auto entry : dir_contents) {
+            string abs_path = join_path(dir, entry); //Get the absolute path of the file/dir
+            if(is_dir(entry)) {
+                Q.push(abs_path);
+            } else {
+                //Entry is a file. Get size of the file and insert into map
+                int fsize = get_file_size(abs_path); //Get file size
+                if(fsize > 0) //Files having 0 size does not have any content to compare, unless we consider all the 0-size file as same
+                    files_by_size[fsize].insert(abs_path);
+            }
+        }
     }
-    for (auto f : fileMap) {
-      if (f.second.size() > 1) {
-        result.push_back(f.second);
-      }
+
+    unordered_map<string, list<string>> dup_files; //For file_hash->list of files
+    //Get list of same files from each entry in the files_by_size and insert into result list
+    for(auto iter:files_by_size) {
+        if(iter.second.size() > 1) { //List having multiple files of same size
+            list<string> files = iter.second;
+            //Iter through files, compute the hash and insert into map.
+            for(auto file: files) {
+                string hash = compute_hash(file);
+                dup_files[hash].insert(file);
+            }
+        }
+    }
+    
+    //Iterate through map to find all the entries having value with multiple entries in list
+    for(auto iter:dup_files) {
+        if(iter.second.size() > 1) {
+            result.insert(iter.second);
+        }
     }
     return result;
-  }
-  
-  
-  
-  
-  
-  //use DFS to traverse the file tree and obtain the 
-  vector<string> getAbsoluteFilePath(string path) {
-    vector<string> allAbsolutePaths.resize(100);
-    stack<string> s;
-    s.push(path);
-    
-    while(!s.empty()) {
-      string cur = s.pop();
-      //get files from each sub-directory
-      DIR *dir = opendir(cur);
-      struct dirent *entry;
-      if (dir)
+}
+
+list<list<string>> find_duplicates(const string& root_path) {
+    list<list<string>> result;
+    if(root_path.empty())
+        return result;
+    queue<string> Q; //For BFS walk of the files
+    unordered_map<string, list<string>> dup_files; //For file_hash->list of files
+    Q.push(root_path);
+    while(!Q.empty()) {
+        string dir = Q.front();
+        Q.pop();
+        list<string> dir_contents = list_dir(dir);
+        for(auto entry : dir_contents) {
+            string abs_path = join_path(dir, entry); //Get the absolute path of the file/dir
+            if(is_dir(entry)) {
+                Q.push(abs_path);
+            } else {
+                //Entry is a file. Compute the hash of the file and insert into map
+                string hash = compute_hash(abs_path);
+                dup_files[hash].insert(abs_path);
+            }
+        }
     }
-  }
-};
+    //Iterate through map to find all the entries having value with multiple entries in list
+    for(auto iter:dup_files) {
+        if(iter.second.size() > 1) {
+            result.insert(iter.second);
+        }
+    }
+    return result;
+}
+
+int main() {
+  auto results = find_duplicates("/foo/bar");
+}
