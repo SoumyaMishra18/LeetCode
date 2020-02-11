@@ -1,0 +1,55 @@
+#include <string>
+#include <fstream>
+#include <vector>
+ 
+bool compare_buffers(vector<char> &buffer, vector<char> &circular_buffer, vector<char>::const_iterator &circular_buffer_iter)
+{
+    vector<char>::const_iterator cur_circular_buffer_iter = circular_buffer_iter;
+    for (vector<char>::const_iterator buffer_iter = buffer.begin(); buffer_iter != buffer.end(); ++buffer_iter)
+    {
+        if (*buffer_iter != *cur_circular_buffer_iter)
+        {
+            return false;
+        }
+ 
+        if (++cur_circular_buffer_iter == circular_buffer.end())
+        {
+            cur_circular_buffer_iter = circular_buffer.begin();
+        }
+    }
+    return true;
+}
+ 
+bool file_contains(string &file_path, vector<char> &buffer)
+{
+    ifstream file_stream(file_path, ios::in | ios::binary);
+    vector<char> chunk;
+    chunk.resize(buffer.size());
+ 
+    auto chunk_iter = chunk.begin();
+    for (auto iter = buffer.begin(); iter != buffer.end() && file_stream.get(*chunk_iter++); ++iter)
+        ;
+ 
+    if (chunk_iter != chunk.end())
+    {
+        return false;
+    }
+ 
+    chunk_iter = chunk.begin();
+    while (!file_stream.eof())
+    {
+        if (compare_buffers(buffer, chunk, chunk_iter))
+        {
+            return true;
+        }
+ 
+        file_stream.get(*chunk_iter++);
+        if (chunk_iter == chunk.end())
+        {
+            chunk_iter = chunk.begin();
+        }
+    }
+ 
+    return false;
+}
+
